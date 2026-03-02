@@ -1,0 +1,140 @@
+/* ----------------------------------------------
+   ABOUT SECTION
+---------------------------------------------- */
+.about-section {
+    padding: 5rem 0;
+    background: #0a0a0a;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+/* Image Placeholder */
+.about-image {
+    position: relative;
+}
+
+.image-placeholder {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: linear-gradient(145deg, #1a1a1a 0%, #151515 100%);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-placeholder:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 40px rgba(212, 163, 115, 0.15);
+    border-color: #d4a373;
+}
+
+.image-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(212, 163, 115, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-placeholder:hover::before {
+    opacity: 1;
+}
+
+.placeholder-content {
+    text-align: center;
+    color: #666;
+    z-index: 1;
+}
+
+.photo-icon {
+    font-size: 5rem;
+    display: block;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.placeholder-content p {
+    font-size: 1rem;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* About Content */
+.about-content {
+    color: #e0e0e0;
+}
+
+.about-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #c0c0c0;
+}
+
+.about-content .highlight {
+    color: #d4a373;
+    font-weight: 600;
+}
+
+.about-content strong {
+    color: #d4a373;
+    font-weight: 600;
+}
+
+.about-content blockquote {
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #d4a373;
+    border-left: 4px solid #d4a373;
+    padding-left: 1.5rem;
+    margin: 2.5rem 0;
+    line-height: 1.6;
+    background: linear-gradient(to right, rgba(212, 163, 115, 0.05), transparent);
+    padding: 1.5rem 2rem;
+    border-radius: 0 16px 16px 0;
+}
+
+/* Stats */
+.about-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2.5rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #d4a373;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

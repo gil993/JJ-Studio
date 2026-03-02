@@ -1,0 +1,91 @@
+/* ----------------------------------------------
+   RESET & BASE STYLES (Global für alle Seiten)
+---------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0;
+    background-color: #0a0a0a;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+}
+
+h1 { font-size: 2.8rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.4rem; }
+
+/* Section Titles (global verwendbar) */
+.section-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #fff;
+    position: relative;
+    padding-bottom: 1rem;
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #d4a373;
+}
+.section-subtitle {
+    text-align: center;
+    color: #a0a0a0;
+    margin-bottom: 2rem;
+}
+
+/* Links & Images (global) */
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Button Styles (global) */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+.btn-primary {
+    background: #d4a373;
+    color: #0a0a0a;
+}
+.btn-primary:hover {
+    background: #e9b384;
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background: transparent;
+    color: #d4a373;
+    border: 2px solid #d4a373;
+}
+.btn-secondary:hover {
+    background: #d4a373;
+    color: #0a0a0a;
+}

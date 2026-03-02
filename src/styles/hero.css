@@ -1,0 +1,42 @@
+/* ----------------------------------------------
+   HERO SECTION
+---------------------------------------------- */
+.hero {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+}
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+.highlight { color: #d4a373; }
+.hero-subtitle { font-size: 1.2rem; color: #b0b0b0; margin-bottom: 1.5rem; }
+.hero-text { margin-bottom: 2rem; }
+
+/* HERO VIDEO CARD */
+.hero-media .video-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1e1e1e;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-media .video-placeholder:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+.placeholder-content { text-align: center; color: #666; }
+.placeholder-content .play-icon {
+    font-size: 4rem;
+    color: #d4a373;
+    margin-bottom: 0.5rem;
+}

@@ -1,0 +1,134 @@
+/* ----------------------------------------------
+   RESPONSIVE (für alle Komponenten)
+---------------------------------------------- */
+@media (max-width: 992px) {
+    h1 { font-size: 2.4rem; }
+    h2 { font-size: 2rem; }
+
+    .hero-grid,
+    .about-grid {
+        gap: 2rem;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-media {
+        order: -1;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .work-section .pagination,
+    .testimonials-section .pagination {
+        gap: 1rem;
+    }
+
+    .work-section .pagination-btn,
+    .testimonials-section .pagination-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .work-section .page-btn,
+    .testimonials-section .page-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .about-stats {
+        justify-content: center;
+    }
+
+    .about-content blockquote {
+        font-size: 1.2rem;
+        padding: 1.2rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .filter-bar {
+        gap: 0.5rem;
+    }
+
+    .filter-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonials-section,
+    .work-section,
+    .about-section,
+    .contact-section {
+        padding: 3rem 0;
+    }
+
+    .testimonial-card,
+    .video-card {
+        padding: 1.5rem;
+    }
+
+    .work-section .pagination,
+    .testimonials-section .pagination {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .work-section .pagination-pages,
+    .testimonials-section .pagination-pages {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .about-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .stat-item {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .about-content blockquote {
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+}

@@ -1,0 +1,122 @@
+/* ----------------------------------------------
+   TESTIMONIALS
+---------------------------------------------- */
+.testimonials-section {
+    padding: 5rem 0;
+    background: #111;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 3rem 0 4rem;
+}
+
+.testimonial-card {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 4px solid #d4a373;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(212, 163, 115, 0.15);
+    border-left-color: #e9b384;
+}
+
+.testimonial-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #d0d0d0;
+    font-style: italic;
+    flex: 1;
+}
+
+.testimonial-author {
+    margin-top: 1.5rem;
+    font-weight: 600;
+    color: #d4a373;
+    text-align: right;
+    font-style: normal;
+    font-size: 1rem;
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+}
+
+/* PAGINATION FÜR TESTIMONIALS */
+.testimonials-section .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: nowrap;
+}
+
+.testimonials-section .pagination-btn {
+    background: transparent;
+    color: #d4a373;
+    border: 1px solid #d4a373;
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.testimonials-section .pagination-btn:hover:not(:disabled) {
+    background: #d4a373;
+    color: #0a0a0a;
+    transform: translateY(-2px);
+}
+
+.testimonials-section .pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: #666;
+    color: #666;
+}
+
+.testimonials-section .pagination-pages {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.testimonials-section .page-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1f1f1f;
+    color: #c0c0c0;
+    border: 1px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.testimonials-section .page-btn:hover {
+    background: #d4a373;
+    color: #0a0a0a;
+    border-color: #d4a373;
+}
+
+.testimonials-section .page-btn.active {
+    background: #d4a373;
+    color: #0a0a0a;
+    border-color: #d4a373;
+    font-weight: 600;
+}

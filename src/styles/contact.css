@@ -1,0 +1,26 @@
+/* ----------------------------------------------
+   CONTACT
+---------------------------------------------- */
+.contact-section {
+    padding: 5rem 0;
+    background: #0a0a0a;
+    text-align: center;
+}
+.contact-section p {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+.social-links a {
+    font-size: 2rem;
+    color: #a0a0a0;
+    transition: color 0.3s, transform 0.2s;
+}
+.social-links a:hover {
+    color: #d4a373;
+    transform: translateY(-4px);
+}

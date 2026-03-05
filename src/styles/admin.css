@@ -1,0 +1,710 @@
+/* ============================================================
+   ADMIN.CSS – Login, Dashboard, Modals
+   Einfach in /src/styles/ ablegen
+   ============================================================ */
+
+/* ── Shared Modal Overlay ───────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 520px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.4rem;
+}
+
+/* ── Login Modal ────────────────────────────────────────────── */
+.login-box {
+    width: 360px;
+}
+
+.login-sub {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: -1rem;
+    margin-bottom: 1.6rem;
+}
+
+.login-error {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* ── Admin Inputs ───────────────────────────────────────────── */
+.admin-label {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 0.72rem 1rem;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+    margin-bottom: 1.1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.admin-input:focus {
+    border-color: #d4a373;
+}
+
+.admin-select {
+    cursor: pointer;
+}
+
+.admin-submit-btn {
+    width: 100%;
+    margin-top: 0.4rem;
+}
+
+/* ── Thumbnail Drag & Drop Zone ─────────────────────────────── */
+.thumb-dropzone {
+    width: 100%;
+    height: 150px;
+    border: 2px dashed #333;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.thumb-dropzone:hover,
+.thumb-dropzone.dragging {
+    border-color: #d4a373;
+    background: #1f1a14;
+}
+
+.thumb-dropzone-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.thumb-drop-icon {
+    font-size: 2rem;
+}
+
+.thumb-drop-text {
+    color: #aaa;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.thumb-drop-sub {
+    color: #555;
+    font-size: 0.78rem;
+}
+
+.thumb-dropzone-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.thumb-dropzone-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.thumb-dropzone.has-image:hover .thumb-dropzone-overlay {
+    opacity: 1;
+}
+
+/* ── Embed preview in modal ─────────────────────────────────── */
+.embed-wrap {
+    margin-bottom: 1.4rem;
+}
+
+.embed-preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 8px;
+    display: block;
+}
+
+.embed-unknown {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* ── Modal action buttons ───────────────────────────────────── */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.admin-btn-cancel {
+    padding: 0.5rem 1.1rem;
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.admin-btn-cancel:hover {
+    border-color: #888;
+    color: #ccc;
+}
+
+/* ── Delete confirm modal ───────────────────────────────────── */
+.delete-box {
+    width: 340px;
+    text-align: center;
+}
+
+.delete-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.delete-title {
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.delete-sub {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1.4rem;
+}
+
+.admin-btn-danger-filled {
+    padding: 0.5rem 1.1rem;
+    background: #ff6b6b;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.admin-btn-danger-filled:hover {
+    background: #ff4a4a;
+}
+
+/* ── Admin Dashboard Layout ─────────────────────────────────── */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: #0f0f0f;
+    border-right: 1px solid #1f1f1f;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    z-index: 100;
+}
+
+.admin-sidebar-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #d4a373;
+    margin-bottom: 2rem;
+    padding-left: 8px;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #888;
+    background: transparent;
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin-nav-item:hover {
+    color: #d4a373;
+    background: rgba(212, 163, 115, 0.07);
+}
+
+.admin-nav-item.active {
+    color: #d4a373;
+    background: rgba(212, 163, 115, 0.12);
+    font-weight: 600;
+}
+
+.admin-sidebar-bottom {
+    margin-top: auto;
+}
+
+/* ── Main content ───────────────────────────────────────────── */
+.admin-main {
+    margin-left: 220px;
+    padding: 2rem;
+    min-height: 100vh;
+    flex: 1;
+}
+
+.admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.admin-page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+/* ── Stats ──────────────────────────────────────────────────── */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.admin-stat-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 1.4rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-stat-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #d4a373;
+    line-height: 1.1;
+}
+
+.admin-stat-label {
+    font-size: 0.82rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.admin-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-card-title {
+    color: #d4a373;
+    font-weight: 700;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid #1f1f1f;
+}
+
+/* ── Recent rows ────────────────────────────────────────────── */
+.admin-recent-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 0.7rem 1.4rem;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.admin-recent-row:last-child {
+    border-bottom: none;
+}
+
+.admin-recent-title {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.admin-recent-meta {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+/* ── Thumbnails in table ────────────────────────────────────── */
+.admin-thumb {
+    width: 80px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #222;
+    display: block;
+}
+
+.admin-thumb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 1.2rem;
+}
+
+/* ── Table ──────────────────────────────────────────────────── */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    padding: 0.85rem 1.1rem;
+    text-align: left;
+    color: #888;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #222;
+}
+
+.admin-table td {
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-video-title {
+    color: #fff;
+    font-weight: 600;
+}
+
+.admin-video-text {
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.admin-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.admin-badge-Ski        { background: rgba(100,180,255,0.15); color: #6ab4ff; }
+.admin-badge-business   { background: rgba(212,163,115,0.15); color: #d4a373; }
+.admin-badge-aftermovie { background: rgba(150,255,150,0.1);  color: #90ee90; }
+.admin-badge-social     { background: rgba(200,150,255,0.15); color: #c89bff; }
+
+/* ── Platform label ─────────────────────────────────────────── */
+.admin-platform {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.admin-platform-youtube { color: #ff6b6b; }
+.admin-platform-vimeo   { color: #6ab4ff; }
+.admin-platform-local   { color: #888; }
+
+/* ── URL link ───────────────────────────────────────────────── */
+.admin-url-link {
+    color: #d4a373;
+    font-size: 0.8rem;
+    word-break: break-all;
+    text-decoration: none;
+}
+
+.admin-url-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Action buttons in table ────────────────────────────────── */
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.admin-btn-edit {
+    padding: 0.38rem 0.85rem;
+    background: transparent;
+    color: #d4a373;
+    border: 1px solid #d4a373;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin-btn-edit:hover {
+    background: #d4a373;
+    color: #0a0a0a;
+}
+
+.admin-btn-danger {
+    padding: 0.38rem 0.85rem;
+    background: transparent;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin-btn-danger:hover {
+    background: #ff6b6b;
+    color: #0a0a0a;
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+.admin-empty {
+    padding: 3rem;
+    text-align: center;
+    color: #555;
+}
+
+/* ── Textarea ───────────────────────────────────────────────── */
+.admin-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+}
+
+/* ── Dashboard two-column ───────────────────────────────────── */
+.dashboard-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.admin-recent-testimonial {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+/* ── Testimonials admin grid ────────────────────────────────── */
+.testimonials-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+}
+
+.testimonial-admin-card {
+    background: #141414;
+    border: 1px solid #222;
+    border-left: 4px solid #d4a373;
+    border-radius: 10px;
+    padding: 1.2rem 1.2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.testimonial-admin-text {
+    color: #d0d0d0;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.testimonial-admin-author {
+    color: #d4a373;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.testimonial-admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+/* ── Datenbank page ─────────────────────────────────────────── */
+.db-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.db-action-card {
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.db-action-icon {
+    font-size: 2rem;
+}
+
+.db-action-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.db-action-desc {
+    color: #888;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.db-action-desc code {
+    background: #222;
+    color: #d4a373;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.83rem;
+}
+
+.db-section-label {
+    color: #d4a373;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.db-preview {
+    background: #0f0f0f;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.78rem;
+    color: #a0a0a0;
+    overflow-x: auto;
+    max-height: 260px;
+    overflow-y: auto;
+    white-space: pre;
+    font-family: 'Courier New', monospace;
+    line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+    .dashboard-two-col,
+    .db-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Footer links ───────────────────────────────────────────── */
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.footer-link-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.impressum-btn {
+    color: #666;
+}
+
+.impressum-btn:hover {
+    color: #d4a373;
+}
+
+.anmelden-btn {
+    color: #2a2a2a; /* fast unsichtbar */
+    font-size: 0.75rem;
+}
+
+.anmelden-btn:hover {
+    color: #555;
+}

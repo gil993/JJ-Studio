@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { testimonials } from "../data/testimonials";
 import "../styles/testimonials.css";
 
-function Testimonials() {
+function Testimonials({ testimonials = [] }) {
     const [page, setPage] = useState(1);
-    const perPage = 3; // Genau 3 pro Seite
+    const perPage = 3;
 
     const totalPages = Math.ceil(testimonials.length / perPage);
     const currentTestimonials = testimonials.slice(
@@ -26,7 +25,6 @@ function Testimonials() {
                     ))}
                 </div>
 
-                {/* Pagination Controls */}
                 {totalPages > 1 && (
                     <div className="pagination testimonials-pagination">
                         <button
@@ -36,7 +34,6 @@ function Testimonials() {
                         >
                             ← Zurück
                         </button>
-
                         <div className="pagination-pages">
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
                                 <button
@@ -48,7 +45,6 @@ function Testimonials() {
                                 </button>
                             ))}
                         </div>
-
                         <button
                             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages}

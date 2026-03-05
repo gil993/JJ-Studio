@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { videos } from "../data/videos";
 import VideoCard from "./VideoCard";
 import "../styles/work.css";
 
-function Work() {
+function Work({ videos = [] }) {
     const [filter, setFilter] = useState("all");
     const [page, setPage] = useState(1);
 
     const perPage = 6;
 
-    // Filter logic
     const filtered = filter === "all"
         ? videos
         : videos.filter(v => v.category === filter);
@@ -20,18 +18,15 @@ function Work() {
         page * perPage
     );
 
-    // Filter ändern + Seite zurücksetzen
     const handleFilterChange = (newFilter) => {
         setFilter(newFilter);
         setPage(1);
     };
 
-    // NEU: Page Change mit Scroll-to-top
     const handlePageChange = (newPage) => {
         setPage(newPage);
-        // Sanft nach oben zur Work-Sektion scrollen
         setTimeout(() => {
-            document.getElementById('work').scrollIntoView({
+            document.getElementById('work')?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
@@ -43,9 +38,8 @@ function Work() {
             <div className="container">
                 <h2 className="section-title">Ausgewählte Arbeiten</h2>
 
-                {/* Filter Bar */}
                 <div className="filter-bar">
-                    {["all", "aftermovie", "social", "business"].map(f => (
+                    {["all", "aftermovie", "social", "business", "Ski"].map(f => (
                         <button
                             key={f}
                             className={`filter-btn ${filter === f ? "active" : ""}`}
@@ -56,14 +50,12 @@ function Work() {
                     ))}
                 </div>
 
-                {/* Video Grid */}
                 <div className="video-grid">
                     {currentVideos.map(video => (
                         <VideoCard key={video.id} video={video} />
                     ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="pagination">
                         <button

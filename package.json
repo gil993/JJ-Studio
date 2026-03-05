@@ -13,6 +13,8 @@
   },
   "homepage": "https://gil993.github.io/JJ-Studio",
   "dependencies": {
+    "@supabase/supabase-js": "^2.98.0",
+    "@vitejs/plugin-react": "^5.1.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

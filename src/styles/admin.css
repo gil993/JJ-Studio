@@ -533,11 +533,236 @@
     color: #0a0a0a;
 }
 
-/* ── Empty state ────────────────────────────────────────────── */
-.admin-empty {
-    padding: 3rem;
-    text-align: center;
+/* ── App Loader ─────────────────────────────────────────────── */
+.app-loader {
+    min-height: 100vh;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.loader-logo {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #d4a373;
+    letter-spacing: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.loader-bar {
+    width: 160px;
+    height: 3px;
+    background: #1f1f1f;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loader-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d4a373, #e9b384);
+    border-radius: 2px;
+    animation: loadbar 1.2s ease-in-out infinite;
+}
+
+@keyframes loadbar {
+    0% { width: 0%; margin-left: 0%; }
+    50% { width: 60%; margin-left: 20%; }
+    100% { width: 0%; margin-left: 100%; }
+}
+
+/* ── Mobile burger button ───────────────────────────────────── */
+.admin-mobile-burger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 200;
+    background: #141414;
+    border: 1px solid #333;
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .admin-mobile-burger {
+        display: flex;
+    }
+
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .admin-main {
+        margin-left: 0;
+        padding: 1rem;
+        padding-top: 4rem;
+    }
+
+    .dashboard-two-col,
+    .db-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-table th:nth-child(5),
+    .admin-table td:nth-child(5) {
+        display: none;
+    }
+}
+
+/* ── Mobile sidebar overlay ─────────────────────────────────── */
+.admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 99;
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar-overlay {
+        display: block;
+    }
+}
+
+/* ── Showreel badge ─────────────────────────────────────────── */
+.showreel-badge {
+    display: inline-block;
+    background: rgba(212,163,115,0.2);
+    color: #d4a373;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* ── Showreel toggle in modal ───────────────────────────────── */
+.showreel-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch {
+    width: 44px;
+    height: 24px;
+    background: #333;
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.toggle-switch.on {
+    background: #d4a373;
+}
+
+.toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.toggle-switch.on .toggle-knob {
+    transform: translateX(20px);
+}
+
+.toggle-label {
+    color: #c0c0c0;
+    font-size: 0.9rem;
+}
+
+/* ── Showreel star button ───────────────────────────────────── */
+.admin-btn-showreel {
+    padding: 0.38rem 0.7rem;
+    background: transparent;
+    color: #d4a373;
+    border: 1px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.admin-btn-showreel:hover {
+    border-color: #d4a373;
+    background: rgba(212,163,115,0.1);
+}
+
+/* ── Drag hint ──────────────────────────────────────────────── */
+.drag-hint {
     color: #555;
+    font-size: 0.82rem;
+    margin-bottom: 0.8rem;
+}
+
+/* ── Sortable row ───────────────────────────────────────────── */
+.sortable-row {
+    transition: background 0.15s;
+}
+
+.sortable-row:hover {
+    background: #1a1a1a;
+}
+
+.sortable-row[draggable]:active {
+    opacity: 0.5;
+}
+
+/* ── Hero play button overlay ───────────────────────────────── */
+.hero-placeholder {
+    position: relative;
+    cursor: pointer;
+}
+
+.hero-play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #fff;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.hero-placeholder:hover .hero-play-btn {
+    opacity: 1;
+
+padding: 3rem;
+text-align: center;
+color: #555;
 }
 
 /* ── Textarea ───────────────────────────────────────────────── */

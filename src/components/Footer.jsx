@@ -20,6 +20,8 @@ function ImpressumModal({ onClose }) {
                     Die auf dieser Website veröffentlichten Inhalte und Werke unterliegen
                     dem Urheberrecht. © 2025 Jon Tuba | JJ-Studios
                 </p>
+                <br/>
+                <br/>
                 <button className="btn btn-primary modal-close-btn" onClick={onClose}>
                     Schliessen
                 </button>

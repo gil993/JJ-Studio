@@ -4,7 +4,6 @@ import "../styles/admin.css";
 
 const CATEGORIES = ["Ski", "aftermovie", "social", "business"];
 
-// ─── Hilfsfunktionen ──────────────────────────────────────────────────────────
 function getYoutubeId(url) {
     const match = url.match(/(?:v=|youtu\.be\/)([^&?/]+)/);
     return match ? match[1] : null;
@@ -24,7 +23,6 @@ function autoThumb(url) {
     return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : "";
 }
 
-// ─── Embed Preview ────────────────────────────────────────────────────────────
 function EmbedPreview({ url }) {
     const type = detectType(url);
     if (type === "youtube") {
@@ -38,25 +36,46 @@ function EmbedPreview({ url }) {
     return <p className="embed-unknown">Unbekannte Video-URL</p>;
 }
 
-// ─── Thumbnail Drag & Drop Zone ───────────────────────────────────────────────
+// ─── Thumbnail Upload zu Supabase Storage ─────────────────────────────────────
+async function uploadThumbnail(file) {
+    const ext = file.name.split(".").pop();
+    const filename = `thumb_${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+        .from("thumbnails")
+        .upload(filename, file, { upsert: true });
+    if (error) { alert("Upload-Fehler: " + error.message); return null; }
+    const { data } = supabase.storage.from("thumbnails").getPublicUrl(filename);
+    return data.publicUrl;
+}
+
+// ─── Thumbnail Drop Zone (mit Storage Upload) ─────────────────────────────────
 function ThumbDropZone({ value, onChange }) {
     const [dragging, setDragging] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const fileRef = useRef(null);
-    const handleFile = (file) => {
+
+    const handleFile = async (file) => {
         if (!file || !file.type.startsWith("image/")) return;
-        const reader = new FileReader();
-        reader.onload = (e) => onChange(e.target.result);
-        reader.readAsDataURL(file);
+        setUploading(true);
+        const url = await uploadThumbnail(file);
+        if (url) onChange(url);
+        setUploading(false);
     };
+
     return (
         <div
             className={`thumb-dropzone ${dragging ? "dragging" : ""} ${value ? "has-image" : ""}`}
             onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
             onDragLeave={() => setDragging(false)}
             onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}
-            onClick={() => fileRef.current?.click()}
+            onClick={() => !uploading && fileRef.current?.click()}
         >
-            {value ? (
+            {uploading ? (
+                <div className="thumb-dropzone-placeholder">
+                    <span className="thumb-drop-icon">⏳</span>
+                    <span className="thumb-drop-text">Wird hochgeladen...</span>
+                </div>
+            ) : value ? (
                 <>
                     <img src={value} alt="Thumbnail" className="thumb-dropzone-img" />
                     <div className="thumb-dropzone-overlay"><span>📷 Bild ersetzen</span></div>
@@ -77,7 +96,7 @@ function ThumbDropZone({ value, onChange }) {
 // ─── Video Modal ──────────────────────────────────────────────────────────────
 function VideoModal({ video, onSave, onClose }) {
     const [form, setForm] = useState(
-        video || { title: "", text: "", category: "Ski", videoUrl: "", thumbnail: "" }
+        video || { title: "", text: "", category: "Ski", videoUrl: "", thumbnail: "", is_showreel: false }
     );
     const [saving, setSaving] = useState(false);
     const [thumbAutoSet, setThumbAutoSet] = useState(false);
@@ -128,6 +147,14 @@ function VideoModal({ video, onSave, onClose }) {
                 <label className="admin-label">Thumbnail</label>
                 <ThumbDropZone value={form.thumbnail} onChange={(v) => set("thumbnail", v)} />
 
+                {/* Showreel Toggle */}
+                <div className="showreel-toggle" onClick={() => set("is_showreel", !form.is_showreel)}>
+                    <div className={`toggle-switch ${form.is_showreel ? "on" : ""}`}>
+                        <div className="toggle-knob" />
+                    </div>
+                    <span className="toggle-label">Als Hero-Showreel festlegen</span>
+                </div>
+
                 {form.videoUrl && detectType(form.videoUrl) !== "unknown" && (
                     <div className="embed-wrap">
                         <label className="admin-label">Video-Vorschau</label>
@@ -153,10 +180,7 @@ function TestimonialModal({ testimonial, onSave, onClose }) {
     const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
     const handleSubmit = async () => {
-        if (!form.text.trim() || !form.author.trim()) {
-            alert("Text und Autor sind Pflicht!");
-            return;
-        }
+        if (!form.text.trim() || !form.author.trim()) { alert("Text und Autor sind Pflicht!"); return; }
         setSaving(true);
         await onSave(form);
         setSaving(false);
@@ -166,17 +190,12 @@ function TestimonialModal({ testimonial, onSave, onClose }) {
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-box" style={{ maxWidth: 420 }} onClick={(e) => e.stopPropagation()}>
                 <h2 className="modal-title">{testimonial ? "Kommentar bearbeiten" : "Neuer Kommentar"}</h2>
-
                 <label className="admin-label">Kommentar *</label>
                 <textarea className="admin-input admin-textarea" value={form.text}
-                          onChange={(e) => set("text", e.target.value)}
-                          placeholder="Was hat der Kunde gesagt?" rows={4} />
-
+                          onChange={(e) => set("text", e.target.value)} placeholder="Was hat der Kunde gesagt?" rows={4} />
                 <label className="admin-label">Autor *</label>
                 <input className="admin-input" value={form.author}
-                       onChange={(e) => set("author", e.target.value)}
-                       placeholder="z.B. Noah, RapCity" />
-
+                       onChange={(e) => set("author", e.target.value)} placeholder="z.B. Noah, RapCity" />
                 <div className="modal-actions">
                     <button className="admin-btn-cancel" onClick={onClose}>Abbrechen</button>
                     <button className="btn btn-primary" onClick={handleSubmit} disabled={saving}>
@@ -188,7 +207,6 @@ function TestimonialModal({ testimonial, onSave, onClose }) {
     );
 }
 
-// ─── Delete Confirm ───────────────────────────────────────────────────────────
 function DeleteConfirm({ onConfirm, onClose }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -205,68 +223,139 @@ function DeleteConfirm({ onConfirm, onClose }) {
     );
 }
 
+// ─── Drag & Drop sortable video row ──────────────────────────────────────────
+function SortableRow({ video, index, onDragStart, onDragOver, onDrop, onEdit, onDelete, onShowreel }) {
+    return (
+        <tr
+            draggable
+            onDragStart={() => onDragStart(index)}
+            onDragOver={(e) => { e.preventDefault(); onDragOver(index); }}
+            onDrop={onDrop}
+            className="sortable-row"
+        >
+            <td style={{ cursor: "grab", color: "#555", paddingRight: 0, fontSize: "1.2rem" }}>⠿</td>
+            <td>
+                {video.thumbnail
+                    ? <img src={video.thumbnail} alt="" className="admin-thumb" onError={(e) => e.target.style.display = "none"} />
+                    : <div className="admin-thumb admin-thumb-empty">▶</div>}
+            </td>
+            <td>
+                <div className="admin-video-title">
+                    {video.is_showreel && <span className="showreel-badge">★ Showreel</span>}
+                    {video.title}
+                </div>
+                <div className="admin-video-text">{video.text}</div>
+            </td>
+            <td><span className={`admin-badge admin-badge-${video.category}`}>{video.category}</span></td>
+            <td>
+                <span className={`admin-platform admin-platform-${video.type}`}>
+                    {video.type === "youtube" ? "▶ YouTube" : video.type === "vimeo" ? "◉ Vimeo" : "?"}
+                </span>
+            </td>
+            <td>
+                <a href={video.videoUrl} target="_blank" rel="noreferrer" className="admin-url-link">
+                    {video.videoUrl?.length > 32 ? video.videoUrl.slice(0, 32) + "…" : video.videoUrl}
+                </a>
+            </td>
+            <td>
+                <div className="admin-actions">
+                    <button className="admin-btn-showreel" onClick={() => onShowreel(video)}
+                            title={video.is_showreel ? "Showreel entfernen" : "Als Showreel setzen"}>
+                        {video.is_showreel ? "★" : "☆"}
+                    </button>
+                    <button className="admin-btn-edit" onClick={() => onEdit(video)}>✏</button>
+                    <button className="admin-btn-danger" onClick={() => onDelete(video.id)}>🗑</button>
+                </div>
+            </td>
+        </tr>
+    );
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLogout }) {
     const [view, setView] = useState("dashboard");
     const [videoModal, setVideoModal] = useState(null);
     const [testimonialModal, setTestimonialModal] = useState(null);
     const [deleteTarget, setDeleteTarget] = useState(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const dragIndex = useRef(null);
+    const hoverIndex = useRef(null);
 
-    // ── Video CRUD ──────────────────────────────────────────────────────────────
+    // ── Video CRUD ──
     const saveVideo = async (v) => {
         if (v.id) {
-            // Update
+            if (v.is_showreel) {
+                // Erst alle anderen auf false setzen
+                await supabase.from("videos").update({ is_showreel: false }).neq("id", v.id);
+                setVideos((prev) => prev.map((x) => ({ ...x, is_showreel: x.id === v.id ? true : false })));
+            }
             const { data, error } = await supabase
                 .from("videos")
-                .update({ title: v.title, text: v.text, category: v.category, thumbnail: v.thumbnail, videoUrl: v.videoUrl, type: v.type })
-                .eq("id", v.id)
-                .select()
-                .single();
+                .update({ title: v.title, text: v.text, category: v.category, thumbnail: v.thumbnail, videoUrl: v.videoUrl, type: v.type, is_showreel: v.is_showreel })
+                .eq("id", v.id).select().single();
             if (!error) setVideos((prev) => prev.map((x) => (x.id === v.id ? data : x)));
         } else {
-            // Insert
+            if (v.is_showreel) {
+                await supabase.from("videos").update({ is_showreel: false }).gte("id", 0);
+            }
             const { data, error } = await supabase
                 .from("videos")
-                .insert({ title: v.title, text: v.text, category: v.category, thumbnail: v.thumbnail, videoUrl: v.videoUrl, type: v.type })
-                .select()
-                .single();
+                .insert({ title: v.title, text: v.text, category: v.category, thumbnail: v.thumbnail, videoUrl: v.videoUrl, type: v.type, is_showreel: v.is_showreel, sort_order: videos.length })
+                .select().single();
             if (!error) setVideos((prev) => [...prev, data]);
         }
         setVideoModal(null);
     };
 
     const deleteVideo = async (id) => {
-        const { error } = await supabase.from("videos").delete().eq("id", id);
-        if (!error) setVideos((prev) => prev.filter((v) => v.id !== id));
+        await supabase.from("videos").delete().eq("id", id);
+        setVideos((prev) => prev.filter((v) => v.id !== id));
         setDeleteTarget(null);
     };
 
-    // ── Testimonial CRUD ────────────────────────────────────────────────────────
+    const toggleShowreel = async (video) => {
+        const newVal = !video.is_showreel;
+        if (newVal) await supabase.from("videos").update({ is_showreel: false }).neq("id", video.id);
+        await supabase.from("videos").update({ is_showreel: newVal }).eq("id", video.id);
+        setVideos((prev) => prev.map((v) => ({ ...v, is_showreel: v.id === video.id ? newVal : (newVal ? false : v.is_showreel) })));
+    };
+
+    // ── Drag & Drop sort ──
+    const handleDragStart = (index) => { dragIndex.current = index; };
+    const handleDragOver = (index) => { hoverIndex.current = index; };
+    const handleDrop = async () => {
+        const from = dragIndex.current;
+        const to = hoverIndex.current;
+        if (from === null || to === null || from === to) return;
+        const reordered = [...videos];
+        const [moved] = reordered.splice(from, 1);
+        reordered.splice(to, 0, moved);
+        // Update sort_order in DB
+        await Promise.all(reordered.map((v, i) =>
+            supabase.from("videos").update({ sort_order: i }).eq("id", v.id)
+        ));
+        setVideos(reordered);
+        dragIndex.current = null;
+        hoverIndex.current = null;
+    };
+
+    // ── Testimonial CRUD ──
     const saveTestimonial = async (t) => {
         if (t.id) {
-            // Update
-            const { data, error } = await supabase
-                .from("testimonials")
-                .update({ text: t.text, author: t.author })
-                .eq("id", t.id)
-                .select()
-                .single();
+            const { data, error } = await supabase.from("testimonials")
+                .update({ text: t.text, author: t.author }).eq("id", t.id).select().single();
             if (!error) setTestimonials((prev) => prev.map((x) => (x.id === t.id ? data : x)));
         } else {
-            // Insert
-            const { data, error } = await supabase
-                .from("testimonials")
-                .insert({ text: t.text, author: t.author })
-                .select()
-                .single();
+            const { data, error } = await supabase.from("testimonials")
+                .insert({ text: t.text, author: t.author }).select().single();
             if (!error) setTestimonials((prev) => [...prev, data]);
         }
         setTestimonialModal(null);
     };
 
     const deleteTestimonial = async (id) => {
-        const { error } = await supabase.from("testimonials").delete().eq("id", id);
-        if (!error) setTestimonials((prev) => prev.filter((t) => t.id !== id));
+        await supabase.from("testimonials").delete().eq("id", id);
+        setTestimonials((prev) => prev.filter((t) => t.id !== id));
         setDeleteTarget(null);
     };
 
@@ -278,19 +367,25 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
     ];
 
     const NAV = [
-        { id: "dashboard",    icon: "📊", label: "Dashboard" },
-        { id: "videos",       icon: "🎬", label: "Videos" },
+        { id: "dashboard", icon: "📊", label: "Dashboard" },
+        { id: "videos", icon: "🎬", label: "Videos" },
         { id: "testimonials", icon: "💬", label: "Kommentare" },
     ];
 
     return (
         <div className="admin-layout">
-            <aside className="admin-sidebar">
+            {/* Mobile burger */}
+            <button className="admin-mobile-burger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                {sidebarOpen ? "✕" : "☰"}
+            </button>
+
+            {/* Sidebar */}
+            <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="admin-sidebar-logo">JJ-Studios</div>
                 {NAV.map((item) => (
                     <button key={item.id}
                             className={`admin-nav-item ${view === item.id ? "active" : ""}`}
-                            onClick={() => setView(item.id)}>
+                            onClick={() => { setView(item.id); setSidebarOpen(false); }}>
                         {item.icon} {item.label}
                     </button>
                 ))}
@@ -299,9 +394,12 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
                 </div>
             </aside>
 
+            {/* Overlay for mobile sidebar */}
+            {sidebarOpen && <div className="admin-sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+
             <main className="admin-main">
 
-                {/* ── DASHBOARD ── */}
+                {/* DASHBOARD */}
                 {view === "dashboard" && (
                     <>
                         <div className="admin-topbar">
@@ -324,7 +422,9 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
                                             ? <img src={v.thumbnail} alt="" className="admin-thumb" onError={(e) => e.target.style.display = "none"} />
                                             : <div className="admin-thumb admin-thumb-empty">▶</div>}
                                         <div>
-                                            <div className="admin-recent-title">{v.title}</div>
+                                            <div className="admin-recent-title">
+                                                {v.is_showreel && <span className="showreel-badge">★</span>} {v.title}
+                                            </div>
                                             <div className="admin-recent-meta">{v.type?.toUpperCase()} · {v.category}</div>
                                         </div>
                                     </div>
@@ -345,18 +445,20 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
                     </>
                 )}
 
-                {/* ── VIDEOS ── */}
+                {/* VIDEOS */}
                 {view === "videos" && (
                     <>
                         <div className="admin-topbar">
                             <h1 className="admin-page-title">Videos verwalten</h1>
                             <button className="btn btn-primary" onClick={() => setVideoModal("add")}>+ Neues Video</button>
                         </div>
+                        <p className="drag-hint">⠿ Zeilen ziehen zum Sortieren · ☆ Als Showreel setzen</p>
                         <div className="admin-card">
                             <table className="admin-table">
                                 <thead>
                                 <tr>
-                                    <th>Thumbnail</th>
+                                    <th></th>
+                                    <th>Thumb</th>
                                     <th>Titel</th>
                                     <th>Kategorie</th>
                                     <th>Plattform</th>
@@ -365,35 +467,15 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {videos.map((v) => (
-                                    <tr key={v.id}>
-                                        <td>
-                                            {v.thumbnail
-                                                ? <img src={v.thumbnail} alt="" className="admin-thumb" onError={(e) => e.target.style.display = "none"} />
-                                                : <div className="admin-thumb admin-thumb-empty">▶</div>}
-                                        </td>
-                                        <td>
-                                            <div className="admin-video-title">{v.title}</div>
-                                            <div className="admin-video-text">{v.text}</div>
-                                        </td>
-                                        <td><span className={`admin-badge admin-badge-${v.category}`}>{v.category}</span></td>
-                                        <td>
-                                                <span className={`admin-platform admin-platform-${v.type}`}>
-                                                    {v.type === "youtube" ? "▶ YouTube" : v.type === "vimeo" ? "◉ Vimeo" : "?"}
-                                                </span>
-                                        </td>
-                                        <td>
-                                            <a href={v.videoUrl} target="_blank" rel="noreferrer" className="admin-url-link">
-                                                {v.videoUrl?.length > 36 ? v.videoUrl.slice(0, 36) + "…" : v.videoUrl}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <div className="admin-actions">
-                                                <button className="admin-btn-edit" onClick={() => setVideoModal(v)}>✏ Bearbeiten</button>
-                                                <button className="admin-btn-danger" onClick={() => setDeleteTarget({ type: "video", id: v.id })}>🗑 Löschen</button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                {videos.map((v, i) => (
+                                    <SortableRow key={v.id} video={v} index={i}
+                                                 onDragStart={handleDragStart}
+                                                 onDragOver={handleDragOver}
+                                                 onDrop={handleDrop}
+                                                 onEdit={(v) => setVideoModal(v)}
+                                                 onDelete={(id) => setDeleteTarget({ type: "video", id })}
+                                                 onShowreel={toggleShowreel}
+                                    />
                                 ))}
                                 </tbody>
                             </table>
@@ -402,7 +484,7 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
                     </>
                 )}
 
-                {/* ── TESTIMONIALS ── */}
+                {/* TESTIMONIALS */}
                 {view === "testimonials" && (
                     <>
                         <div className="admin-topbar">
@@ -427,26 +509,18 @@ function AdminDashboard({ videos, setVideos, testimonials, setTestimonials, onLo
             </main>
 
             {videoModal && (
-                <VideoModal
-                    video={videoModal === "add" ? null : videoModal}
-                    onSave={saveVideo}
-                    onClose={() => setVideoModal(null)}
-                />
+                <VideoModal video={videoModal === "add" ? null : videoModal}
+                            onSave={saveVideo} onClose={() => setVideoModal(null)} />
             )}
             {testimonialModal && (
-                <TestimonialModal
-                    testimonial={testimonialModal === "add" ? null : testimonialModal}
-                    onSave={saveTestimonial}
-                    onClose={() => setTestimonialModal(null)}
-                />
+                <TestimonialModal testimonial={testimonialModal === "add" ? null : testimonialModal}
+                                  onSave={saveTestimonial} onClose={() => setTestimonialModal(null)} />
             )}
             {deleteTarget && (
                 <DeleteConfirm
-                    onConfirm={() =>
-                        deleteTarget.type === "video"
-                            ? deleteVideo(deleteTarget.id)
-                            : deleteTestimonial(deleteTarget.id)
-                    }
+                    onConfirm={() => deleteTarget.type === "video"
+                        ? deleteVideo(deleteTarget.id)
+                        : deleteTestimonial(deleteTarget.id)}
                     onClose={() => setDeleteTarget(null)}
                 />
             )}

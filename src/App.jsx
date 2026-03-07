@@ -12,17 +12,22 @@ import AdminDashboard from "./components/AdminDashboard";
 import "./styles/responsive.css";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [session, setSession] = useState(null);
     const [showLogin, setShowLogin] = useState(false);
     const [videos, setVideos] = useState([]);
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // ── Daten beim Start laden ──
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+        return () => subscription.unsubscribe();
+    }, []);
+
     useEffect(() => {
         async function loadData() {
             const [{ data: vids }, { data: testi }] = await Promise.all([
-                supabase.from("videos").select("*").order("created_at", { ascending: true }),
+                supabase.from("videos").select("*").order("sort_order", { ascending: true }),
                 supabase.from("testimonials").select("*").order("created_at", { ascending: true }),
             ]);
             if (vids) setVideos(vids);
@@ -32,26 +37,30 @@ function App() {
         loadData();
     }, []);
 
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setSession(null);
+    };
+
+    const showreel = videos.find((v) => v.is_showreel) || null;
+
     if (loading) {
         return (
-            <div style={{
-                minHeight: "100vh", background: "#0a0a0a",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#d4a373", fontSize: "1.2rem", fontFamily: "sans-serif"
-            }}>
-                Laden...
+            <div className="app-loader">
+                <div className="loader-logo">JJ</div>
+                <div className="loader-bar"><div className="loader-fill" /></div>
             </div>
         );
     }
 
-    if (isLoggedIn) {
+    if (session) {
         return (
             <AdminDashboard
                 videos={videos}
                 setVideos={setVideos}
                 testimonials={testimonials}
                 setTestimonials={setTestimonials}
-                onLogout={() => setIsLoggedIn(false)}
+                onLogout={handleLogout}
             />
         );
     }
@@ -59,7 +68,7 @@ function App() {
     return (
         <>
             <Header />
-            <Hero />
+            <Hero showreel={showreel} />
             <Work videos={videos} />
             <About />
             <Testimonials testimonials={testimonials} />
@@ -68,7 +77,7 @@ function App() {
 
             {showLogin && (
                 <AdminLogin
-                    onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }}
+                    onLogin={() => setShowLogin(false)}
                     onClose={() => setShowLogin(false)}
                 />
             )}

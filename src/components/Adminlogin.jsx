@@ -1,19 +1,30 @@
+import { useState } from "react";
+import { supabase } from "../supabase";
 import "../styles/admin.css";
 
-const ADMIN_USER = "admin123";
-const ADMIN_PASS = "Skifahren";
-
-import { useState } from "react";
-
 function AdminLogin({ onLogin, onClose }) {
-    const [form, setForm] = useState({ user: "", pass: "" });
+    const [form, setForm] = useState({ email: "", pass: "" });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = () => {
-        if (form.user === ADMIN_USER && form.pass === ADMIN_PASS) {
-            onLogin();
+    const handleSubmit = async () => {
+        if (!form.email || !form.pass) {
+            setError("Bitte alle Felder ausfüllen.");
+            return;
+        }
+        setLoading(true);
+        setError("");
+
+        const { error: authError } = await supabase.auth.signInWithPassword({
+            email: form.email,
+            password: form.pass,
+        });
+
+        if (authError) {
+            setError("Falsche E-Mail oder falsches Passwort.");
+            setLoading(false);
         } else {
-            setError("Falscher Benutzername oder Passwort.");
+            onLogin();
         }
     };
 
@@ -25,13 +36,15 @@ function AdminLogin({ onLogin, onClose }) {
 
                 {error && <p className="login-error">{error}</p>}
 
-                <label className="admin-label">Benutzername</label>
+                <label className="admin-label">E-Mail</label>
                 <input
                     className="admin-input"
-                    value={form.user}
-                    onChange={(e) => setForm((f) => ({ ...f, user: e.target.value }))}
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                     onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                     autoFocus
+                    placeholder="admin@jj-studios.ch"
                 />
 
                 <label className="admin-label">Passwort</label>
@@ -43,8 +56,12 @@ function AdminLogin({ onLogin, onClose }) {
                     onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 />
 
-                <button className="btn btn-primary admin-submit-btn" onClick={handleSubmit}>
-                    Anmelden
+                <button
+                    className="btn btn-primary admin-submit-btn"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    {loading ? "Anmelden..." : "Anmelden"}
                 </button>
             </div>
         </div>

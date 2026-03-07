@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { supabase } from "../supabase";
+import { supabase } from "../supabase.js";
 import "../styles/admin.css";
 
 const CATEGORIES = ["Ski", "aftermovie", "social", "business"];

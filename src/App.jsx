@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "./supabase";
+import { supabase } from "./supabase.js";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Work from "./components/Work";
